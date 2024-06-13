@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Your Custom CSS Files -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/css/responsive.css" rel="stylesheet" type="text/css">
+    <link href="/css/pages.css" rel="stylesheet" type="text/css">
+    <style>
+        .modal-backdrop.show {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 p-0">
+                <!-- Sidebar content here -->
+                {{>sidebar}}
+            </div>
+            <div class="col-10">
+                <div id="pos_view">
+                    <div class="row">
+                        <div id="right" class="right">
+                            {{>info}}
+                        </div>
+                        <div class="col-md-5">
+                            <div class="card-box" id="card-box">
+                                <div style="overflow-x:auto;  max-height: 180px;">
+                                    <table class="table" id="cartTable" style="overflow-x:auto; height:50px">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Sản phẩm</th>
+                                                <th>Số lượng</th>
+                                                <th>Giá</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <hr />
+                                <div class="m-t-5">
+                                    <div class="row">
+                                        <div class="col-md-3">Total Item(s)</div>
+                                        <div class="col-md-3">:
+                                            <span id="total">0</span>
+                                        </div>
+                                        <div class="col-md-3">Discount(%)</div>
+                                        <div class="col-md-3"><input class="form-control" type="number"
+                                                id="inputDiscount" min="0" value="0" max="99"
+                                                oninput="calculateCart();" /></div>
+                                    </div>
+                                    <p style="font-size: 18px; ">Phương thức</p>
+                                    <div class="form-group mb-0 row sectionUseAccounting" id="cashContainer">
+                                        <label class="col-5 control-label col-form-label">Tiền mặt</label>
+                                        <div class="col-7">
+                                            <div class="input-group">
+                                                <div style="cursor: pointer" class="input-group-prepend copySubTotal"
+                                                    title="Điền theo tổng phải trả">
+                                                    <span class="input-group-text px-2">
+                                                        <i class="fa fa-arrow-right" id="copySubTotal"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" maxlength="20"
+                                                    class="form-control changeInfoPayment textLarge autoNumeric text-right"
+                                                    id="cash">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-0 row sectionUseAccounting mt-3"
+                                        id="moneyTransferContainer">
+                                        <label class="col-5 control-label col-form-label">Chuyển khoản</label>
+                                        <div class="col-7">
+                                            <div class="input-group">
+                                                <div style="cursor: pointer" class="input-group-prepend copySubTotalCK"
+                                                    title="Điền theo tổng phải trả">
+                                                    <span class="input-group-text px-2">
+                                                        <i class="fa fa-arrow-right"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" maxlength="20"
+                                                    class="form-control changeInfoPayment samePaymentMethod textLarge autoNumeric text-right"
+                                                    id="moneyTransfer">
+                                            </div>
+                                            <div id="transferAccountIdContainer">
+                                                <select
+                                                    class="form-control changeInfoPayment sectionAccountingSelectBox"
+                                                    id="transferAccountId" style="">
+                                                    <option value=""> Chọn tài khoản </option>
+                                                    <option value="MB">Loi MB</option>
+                                                    <option value="Tech">Loi Tech</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3" style="font-size: 18px; "><b>Tổng giá :</b></div>
+                                        <div class="col-md-4" style="font-size: 18px;">: <span id="amount"
+                                                class="amount"><b>0.0</b></span></div>
+                                    </div>
+
+                                    <div class="form-group mb-0 row">
+                                        <label class="col-6 control-label font-weight-semibold col-form-label"
+                                            style="font-size: 1.0625rem; display:none" id="remainMoneyPositive">Tiền
+                                            thừa</label>
+                                        <label class="col-6 control-label font-weight-semibold col-form-label"
+                                            style="font-size: 1.0625rem;" id="remainMoneyNegative">Còn thiếu</label>
+                                        <span class="col-6 text-right textLarge moneyHightlight text-danger"
+                                            id="remainMoney"></span>
+                                    </div>
+                                    <p id="oldAmount" style="display: none;"></p>
+                                </div>
+                                <div class="button-list pull-right">
+                                    <button type="button" id="refreshButton"
+                                        class="btn btn-danger waves-effect waves-light">
+                                        <span class="btn-label"><i class="fa fa-refresh"></i></span>Làm mới
+                                    </button>
+                                    <button type="button" id="payButton" data-toggle="modal" data-target="#exampleModal"
+                                        class="btn btn-success waves-effect waves-light">
+                                        <span class="btn-label"><i class="fa fa-money"></i></span>Thanh toán
+                                    </button>
+                                </div>
+                                <hr />
+                            </div>
+                            <div class="card-info" style="">
+                                <div class="row">
+                                    <div class="col-md-6 col-6">
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text px-2" title="Điện thoại">
+                                                    <i class="fa fa-phone-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control customerInfo"
+                                                onkeyup="sendData(this)" placeholder="Điện thoại" id="customerMobile">
+                                            <div id="searchResult" class="bootstrap-autocomplete dropdown-menu show"
+                                                style="display: none;"></div>
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text px-2" title="Họ tên">
+                                                    <i class="fa fa-user"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control customerInfo" id="customerName"
+                                                placeholder="Tên khách">
+                                            <input type="text" class="form-control customerInfo" id="customerId"
+                                                style="display: none" placeholder="Id">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-6">
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text px-2" title="Giới tính">
+                                                    <i class="fa fa-intersex"></i>
+                                                </span>
+                                            </div>
+                                            <select class="form-control customerInfo px-1" id="customerGender">
+                                                <option value="">- Giới tính -</option>
+                                                <option value="male">Nam</option>
+                                                <option value="female">Nữ</option>
+                                                <option value="other">Khác</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text px-2" title="Địa chỉ">
+                                                    <i class="fa fa-map-marker"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control customerInfoAddress"
+                                                id="customerAddress" placeholder="Địa chỉ">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12 text-center mt-2">
+                                        <button id="btnSaveCustomer" class="btn btn-primary"><i
+                                                class="fa fa-user mr-1"></i> Lưu khách hàng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-box">
+                                <div class="row justify-content-between d-flex w-100">
+                                    <div class="col-5">
+                                        <div class="searchbar">
+                                            <form>
+                                                <div class="input-group border-search p-1 mb-3 bg-body rounded">
+                                                    <input type="text" class="form-control" id="srcpro"
+                                                        placeholder="Search by name and code" aria-label="Search"
+                                                        aria-describedby="button-addon2" autocomplete="off"
+                                                        onkeyup="sendDataProduct(this)">
+                                                    <div class="input-group-append">
+                                                        <div class="btn" id="button-addon2"><i
+                                                                class="fa-solid fa-magnifying-glass"></i></div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="searchbar">
+                                            <form>
+                                                <div class="input-group border-search p-1 mb-3 bg-body rounded">
+                                                    <select name="poscat" id="poscat" class="form-control"
+                                                        aria-placeholder="search by category">
+                                                        <option value="all">All category</option>
+                                                        <option value="Phụ kiện"> Phụ kiện </option>
+                                                        <option value="Điện thoại"> Điện thoại </option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="searchResultProduct">
+                                    <div class="row d-flex " id="product_list" style="overflow-x:auto; height:420px;">
+                                        {{#each products}}
+                                        <div class="col-xl-4 col-md-6 col-sm-12 m-b-20 p-2">
+                                            <div class="mb-2 w-50">
+                                                <div class="media">
+                                                    <img class="align-self-center" alt="your image" width="70px"
+                                                        height="130px" src="/uploads/{{this.image}}">
+                                                    <div class="media-body ml-3">
+                                                        <h6 class="mb-2">{{this.name}}</h6>
+                                                        <h4 style="color: firebrick;">0{{this.barcodeUPC}}</h4>
+                                                        <h5 style="font-size: 12px;" id="qtyStock">Hiện còn: <span>{{this.quantityInStock}}</span> </h5>
+                                                        <h7 hidden class="mb-2">{{this._id}}</h7>
+                                                        <p class="font-15">{{this.retailPriceFormatted}}đ</p>
+                                                        <button class="btn btn-add-card btn-round btn-primary-rgba"
+                                                            data-product-id="{{this._id}}"><i
+                                                                class="fa fa-shopping-cart" style="font-size:24px"
+                                                                type="submit" value="submit"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div id ="msg" class="alert alert-dismissible fade show alert-danger fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Vui lòng nhập đầy đủ thông tin </strong>
+                    </div>
+                    <div id ="msg2" class="alert alert-dismissible fade show alert-danger fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Hãy chọn sản phẩm </strong>
+                    </div>
+                    <div id ="msg3" class="alert alert-dismissible fade show alert-success fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Hãy điền đầy đủ thông tin khách hàng </strong>
+                    </div>
+                    <div id ="msg4" class="alert alert-dismissible fade show alert-success fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;">Lưu khách hàng thành công</strong>
+                    </div>
+                    <div id ="msg5" class="alert alert-dismissible fade show alert-danger fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Lỗi !!! </strong>
+                    </div>
+                    <div id ="msg6" class="alert alert-dismissible fade show alert-danger fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Không đủ số lượng </strong>
+                    </div>
+                    <div id ="msg7" class="alert alert-dismissible fade show alert-danger fixed-bottom" role="alert" style="display:none;position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> Hết hàng </strong>
+                    </div>
+            </div>
+            <br>
+        </div>
+        <div class="modal fade" id="exampleModal" class="modal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="invoicemodal">
+                    <div class="modal-header border-radius-fix ">
+                        <div class="col-12 ">
+                            <p class="mode-titel text-white"></p>
+                            <center> <button class="btn btn-info m-r-30 p-2 btn-lg border-rounded" id="pri_invo"><a
+                                        href="">Print Invoice</a></button>
+                                <a href="" class="btn btn-danger text-white p-2 btn-lg">Back</a>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div id="finalinvoice">
+                            <div id="print_invoice" <div="" class="col-12 partition">
+                                <center>
+                                    <h3 class="font-weight-bolder w-50"><img src="/images/logoWeb.png" alt="" /></h3>
+                                    <h5>Số 19, đường Nguyễn Hữu Thọ, phường Tân Phong, Quận 7, TP. Hồ Chí Minh</h5>
+                                    <p><span class="font-weight-bold font-14">Điện thoại: </span>(028) 37 755 035</p>
+                                    <p><span class="font-weight-bold font-14">Email:
+                                        </span>tonducthanguniversity@tdtu.edu.vn</p>
+                                </center>
+                            </div>
+                            <hr>
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-6">
+                                    <p id="orderNumber"><span class="font-weight-bold">Order Id:</span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p id="orderDate">2022-10-19</p>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-6">
+                                    <p id="orderNameCus"><span class="font-weight-bold">Tên khách hàng:</span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p id="orderPaymentMethod"><span>Phương thức thanh toán:</span></p>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-6">
+                                    <p id="orderNameStaff"><span class="font-weight-bold">Nhân viên:</span></p>
+                                </div>
+                                <div class="col-6">
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="default-datatable" class="display table  ">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr No</th>
+                                            <th> Tên</th>
+                                            <th> Số lượng</th>
+                                            <th> Giá</th>
+                                            <th> Tổng giá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="item" class="align-items-center">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <div class="row justify-content-end" style="marin:-15px">
+                                <table class="col-6 table table-borderless text-right">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tổng giá thực:</td>
+                                            <td class="text-left"><span id="oldTotalAmountInvoice"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Khuyến mãi:</td>
+                                            <td class="text-left"><span id="discount"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-weight-bold font-18">Tổng giá hóa đơn:</td>
+                                            <td class="text-left" id="totalAmountInvoice"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tiền nhận:</td>
+                                            <td class="text-left"><span id="amount_given"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tiền thối:</td>
+                                            <td class="text-left"><span id="change_given"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="row">
+                                <p class="m-l-15">Mobile&Accessories</p>
+                            </div>
+                            <center>
+                                <h3 class="font-18">******** Xin cám ơn quý khách ********</h3>
+                            </center>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script src="/js/pos.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-2 p-0">
+            <!-- Sidebar content here -->
+            {{>sidebar}}
+        </div>
+        <div class="col-10">
+            <div id="right" class="right">
+                {{>info}}
+            </div>
+            <div class="col-6 mx-auto " style="margin-top: 30px ;width: 50%;">
+                <h1 class="">Sửa sản phẩm {{product.name}}</h1>
+                <form action="/product/update/{{product._id}}" method="post" enctype="multipart/form-data"
+                    class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="barcode">Mã vạch:</label>
+                        <input class="form-control" placeholder="Nhập mã vạch" id="barcode" name="barcode" value="{{product.barcodeUPC}}">
+                        <th class="align-middle"><img src="data:image/png;base64,{{product.barcode}}" alt=""
+                                class="img-thumbnail" style="width:100px"></th>
+                    </div>
+                    <div class="form-group">
+                        <label for="imgPd">Ảnh sản phẩm</label>
+                        <input class="form-control" type="file" id="imgPd" name="imgPd">
+                        <img src="/uploads/{{product.image}}" alt="" class="img-thumbnail" style="width:100px">
+                    </div>
+                    <input type="hidden" name="old_image" id="" value="{{product.image}}">
+                    <div class="form-group">
+                        <label for="namePd">Tên sản phẩm</label>
+                        <input class="form-control" placeholder="Nhập tên sản phẩm" id="namePd" name="namePd"
+                            value="{{product.name}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="importPrice">Giá nhập</label>
+                        <input class="form-control" placeholder="Nhập giá nhập" id="importPrice" name="importPrice"
+                            value="{{product.importPrice}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="retailPrice">Giá bán</label>
+                        <input class="form-control" placeholder="Nhập giá bán" id="retailPrice" name="retailPrice"
+                            value="{{product.retailPrice}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantityInStock">Số lượng sẳn</label>
+                        <input class="form-control" placeholder="Nhập số lượng có sẳn tại cửa hàng" id="quantityInStock" name="quantityInStock"
+                            value="{{product.quantityInStock}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="product_category">Loại</label>
+                        <select class="form-select select_cat" id="category" required="" name="product_category">
+                            <option value="Điện thoại" {{#ifeq product.category 'Điện thoại' }} selected {{/ifeq}}>Điện
+                                thoại</option>
+                            <option value="Phụ kiện" {{#ifeq product.category 'Phụ kiện' }} selected {{/ifeq}}>Phụ kiện
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-success " style="margin-top: 15px;">Sửa sản
+                        phẩm</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

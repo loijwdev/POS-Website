@@ -1,0 +1,76 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-2 p-0">
+            <!-- Sidebar content here -->
+            {{>sidebar}}
+        </div>
+        <div class="col-10">
+            <div id="right" class="right">
+                {{>info}}
+            </div>
+            {{#if message }}
+                    <div class="alert alert-dismissible fade show alert-{{message.type}} fixed-bottom" role="alert" style="position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> {{message.message}} </strong>
+                    </div>
+                    {{/if}}
+            <div class="col-6 mx-auto " style="margin-top: 30px ;width: 50%;">
+                <h1 class="">Thêm sản phẩm</h1>
+                <form action="/product/addProduct" method="post" enctype="multipart/form-data" class="needs-validation"
+                    novalidate>
+                    <div class="form-group">
+                        <label for="barcode">Mã vạch:</label>
+                        <input class="form-control" placeholder="Nhập mã vạch" id="barcode" name="barcode">
+                    </div>
+                    <div class="form-group">
+                        <label for="imgPd">Ảnh sản phẩm</label>
+                        <input class="form-control" type="file" id="imgPd" name="imgPd">
+                    </div>
+                    <div class="form-group">
+                        <label for="namePd">Tên sản phẩm</label>
+                        <input class="form-control" placeholder="Nhập tên sản phẩm" id="namePd" name="namePd">
+                    </div>
+                    <div class="form-group">
+                        <label for="importPrice">Giá nhập</label>
+                        <input class="form-control" placeholder="Nhập giá nhập" id="importPrice" name="importPrice">
+                    </div>
+                    <div class="form-group">
+                        <label for="retailPrice">Giá bán</label>
+                        <input class="form-control" placeholder="Nhập giá bán" id="retailPrice" name="retailPrice">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantityInStock">Số lượng sẳn</label>
+                        <input class="form-control" placeholder="Nhập số lượng có sẳn tại cửa hàng" id="quantityInStock" name="quantityInStock">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Loại</label>
+                        <select class="form-select select_cat" id="category" required="" name="product_category">
+                            <option value="Điện thoại">Điện thoại</option>
+                            <option value="Phụ kiện">Phụ kiện</option>
+                        </select>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-primary " style="margin-top: 15px;">Thêm sản
+                        phẩm</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<script>
+
+
+    var messageExists = document.querySelector('.alert.alert-dismissible.fade.show') !== null;
+    if (messageExists) {
+        var messageElement = document.querySelector('.alert.alert-dismissible.fade.show');
+        setTimeout(function () {
+           messageElement.style.display = 'none';
+       }, 5000);
+    }
+
+
+</script>

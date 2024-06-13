@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 p-0">
+                <!-- Sidebar content here -->
+                {{>sidebar}}
+            </div>
+            <div class="col-10 ">
+                <div id="right" class="right">
+                    {{>info}}
+                </div>
+                <div class="row justify-content-between mt-3">
+                    <div class="col">
+                        <h2 style="font-size: 35px;">Đơn hàng</h2>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <!-- Add a search form -->
+                    <form action="/order" method="GET" class="mb-3" style="width:30%; float:right">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm đơn hàng" name="search"
+                                value="{{search}}">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                    {{#if orderMessage }}
+                    <div class="alert alert-dismissible fade show alert-{{orderMessage.type}} fixed-bottom" role="alert" style="position: fixed;bottom: 10px;left: auto;z-index: 1000;width: 30%;margin-bottom: 40px;height: 60px;">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <strong style="margin-top: 10px;font-size:15px;"> {{orderMessage.message}} </strong>
+                    </div>
+                    {{/if}}
+                    {{#if orders}}
+                    <table class="w-100 mt-3 table table-striped my-3 mt-3" id="tableProduct1">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Id</th>
+                                <th>Khách hàng</th>
+                                <th>Ngày giờ</th>
+                                <th>Phương thức thanh toán </th>
+                                <th>Tổng tiền</th>
+                                <th>Giảm giá</th>
+                                <th>In hóa đơn</th>
+                            </tr>
+                        </thead>
+                        {{#each orders }}
+                        <tbody>
+                            <tr>
+                                <th class="align-middle">{{incrementedIndex @index}}</th>
+                                <th class="align-middle">{{this._id}}</th>
+                                <th class="align-middle">{{this.customer_name}}</th>
+                                <th class="align-middle">{{this.created}}</th>
+                                <th class="align-middle">{{this.payment_method}}</th>
+                                <th class="align-middle">{{this.total_amount}}</th>
+                                <th class="align-middle">{{this.discount}}%</th>
+                                <td class="align-middle">
+                                    <button class="btn  btn-primary-rgba" id="pos_order_invoice"><a href="/order/download-invoice/{{this._id}}"><i class="fa-solid fa-download mr-2"></i>Hóa đơn</a></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        {{/each}}
+                    </table>
+                    {{else}}
+                    <h1 class="text-center text-secondary mt-5">Không có đơn hàng</h1>
+                    {{/if}}
+                    <!-- Add pagination links -->
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            {{#if pagination.prevPage}}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="/order?page={{pagination.prevPage}}&pageSize={{pagination.pageSize}}&search={{search}}">
+                                    Previous
+                                </a>
+                            </li>
+                            {{/if}}
+
+                            {{#each pagination.pages}}
+                            <li class="page-item {{#if this.isCurrent}}active{{/if}}">
+                                <a class="page-link"
+                                    href="/order?page={{this.page}}&pageSize={{pagination.pageSize}}&search={{search}}">
+                                    {{this.page}}
+                                </a>
+                            </li>
+                            {{/each}}
+
+                            {{#if pagination.nextPage}}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="/order?page={{pagination.nextPage}}&pageSize={{pagination.pageSize}}&search={{search}}">
+                                    Next
+                                </a>
+                            </li>
+                            {{/if}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+
+    var messageExists = document.querySelector('.alert.alert-dismissible.fade.show') !== null;
+    if (messageExists) {
+        var messageElement = document.querySelector('.alert.alert-dismissible.fade.show');
+        setTimeout(function () {
+            messageElement.style.display = 'none';
+        }, 5000);
+    }
+
+
+</script>
